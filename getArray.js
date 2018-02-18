@@ -1,7 +1,9 @@
 const fs = require('fs');
 const csv = require('fast-csv');
-const calculateMaxValuable = (id, price, l, w, h) => price / (l * w * h);
-
+/*
+ * Calculates price of the cubicle cm
+ */
+const calculateMaxValuable = (id, price, l, w, h) =>  (l * w * h) / price;
 
 module.exports = async (quantity) => {
 	const stream = fs.createReadStream("./products.csv").pipe(csv());
@@ -17,5 +19,5 @@ module.exports = async (quantity) => {
 			})
 			.on("end", () => resolve(result))
 			.on('data-invalid', () => reject('Invalid data'))
-	}).then(unsortedArr => unsortedArr.sort((a, b) => calculateMaxValuable(...b) - calculateMaxValuable(...a)));
+	}).then(unsortedArr => unsortedArr.sort((a, b) => calculateMaxValuable(...a) - calculateMaxValuable(...b)));
 };
