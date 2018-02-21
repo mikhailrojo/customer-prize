@@ -15,9 +15,9 @@ module.exports = async (quantity) => {
 					return resolve(result);
 				}
 				result.push(data.map(i => parseInt(i)));
-
 			})
 			.on("end", () => resolve(result))
 			.on('data-invalid', () => reject('Invalid data'))
-	}).then(unsortedArr => unsortedArr.sort((a, b) => calculateMaxValuable(...a) - calculateMaxValuable(...b)));
+	})
+		//.then(unsortedArr => unsortedArr.sort((a, b) => calculateMaxValuable(...a) - calculateMaxValuable(...b)));
 };
