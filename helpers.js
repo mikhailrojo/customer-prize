@@ -4,7 +4,7 @@ const cl = console.log;
  * Gets price of items in the array
  * @param {Object[]} arr array of products
  */
-const getTotalSum = (arr) => arr.reduce((acc, product) => acc + product[0], 0);
+const getTotalSumOfIds = (arr) => arr.reduce((acc, product) => acc + product[0], 0);
 
 /**
  * Gets total value of all items
@@ -32,7 +32,7 @@ const getTotalVolume = (arr) => arr.reduce((acc, [,,l, w, h]) => acc + (l * w * 
  * @param {Object[]} arr array of chosen products
  */
 const printStats = (maxVol, arr) => {
-	const totalSum = getTotalSum(arr);
+	const totalSum = getTotalSumOfIds(arr);
 	const totalValue = getTotalValue(arr);
 	const totalVolume = getTotalVolume(arr);
 
@@ -129,5 +129,9 @@ module.exports = {
 	printStats,
 	getProductVol,
 	getIndexesOfChosenItems,
-	getLightestProducts
+	getLightestProducts,
+	getTotalSumOfIds,
+	getTotalValue,
+	getProductVol,
+	getTotalVolume
 };

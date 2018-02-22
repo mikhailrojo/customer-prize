@@ -2,7 +2,7 @@
 
 const {getProductVol} = require('./helpers');
 
-module.exports = function(array, W) {
+module.exports = function(array, W = 0) {
 	const values = array.map(i => i[1]);
 	const weights = array.map(i => getProductVol(i));
 	const m = [];
