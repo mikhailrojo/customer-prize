@@ -1,6 +1,10 @@
-const cl = console.log;
+'use strict';
 
-module.exports = function(values, weights, W) {
+const {getProductVol} = require('./helpers');
+
+module.exports = function(array, W) {
+	const values = array.map(i => i[1]);
+	const weights = array.map(i => getProductVol(i));
 	const m = [];
 
 	for(let i = 0; i <= values.length; i ++){
@@ -11,22 +15,17 @@ module.exports = function(values, weights, W) {
 		m[0].push(0);
 	}
 
-	for (let i = 1; i<= values.length; i ++) {
+	for (let i = 1; i <= values.length; i ++) {
 		for (let j = 0; j <= W; j++ ){
 			const currentW = weights[i - 1]; // 5
 			const prevRow = m[i - 1];
 
-			if (currentW > j) { // если  5 > 0,1,2,3,4
+			if (currentW > j) {
 				m[i][j] = prevRow[j];
 			} else {
 				m[i][j] = Math.max(prevRow[j], prevRow[j - currentW] + values[i - 1]);
 			}
 		}
-		if (i>16000) {
-			cl(i, ' из ', values.length);
-		}
-
 	}
-
 	return m;
 }

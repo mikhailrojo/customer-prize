@@ -5,11 +5,13 @@ const cl = console.log;
  * @param {Object[]} arr array of products
  */
 const getTotalSum = (arr) => arr.reduce((acc, product) => acc + product[0], 0);
+
 /**
  * Gets total value of all items
  * @param {Object[]} arr array of products
  */
 const getTotalValue = (arr) => arr.reduce((acc, product) => acc + product[1], 0);
+
 /**
  * Gets item volume
  * @param {Number} l length
@@ -17,6 +19,7 @@ const getTotalValue = (arr) => arr.reduce((acc, product) => acc + product[1], 0)
  * @param {Number} h height
  */
 const getProductVol = ([,,l, w, h]) => l * w * h;
+
 /**
  * Get volume of all items in the array
  * @param {Object[]} arr array of products
@@ -28,7 +31,7 @@ const getTotalVolume = (arr) => arr.reduce((acc, [,,l, w, h]) => acc + (l * w * 
  * @param {Number} maxVol max tote capacity
  * @param {Object[]} arr array of chosen products
  */
-const getStats = (maxVol, arr) => {
+const printStats = (maxVol, arr) => {
 	const totalSum = getTotalSum(arr);
 	const totalValue = getTotalValue(arr);
 	const totalVolume = getTotalVolume(arr);
@@ -68,8 +71,63 @@ const getFilledTote = (arr, maxVol) => {
 	return chosenItems;
 };
 
+/**
+ * From the given matrix returns indexes of the most valuable items
+ * @param { number[][] } m matrix
+ * @param {number} W maximum capacity volume
+ * @returns {number[]}
+ */
+const getIndexesOfChosenItems = (m, W) => {
+	const weight = m.map(i => i[5]);
+	const length = weight.length;
+	let result = '';
+	let lastJ = W;
+	let lastI = length;
+	let lastVal = m[lastI][lastJ];
+
+	while(lastI) {
+		lastI--;
+		let isCopiedFromAbove = lastVal === m[lastI][lastJ];
+		if(isCopiedFromAbove) {
+			lastVal = m[lastI][lastJ];
+		} else {
+			lastVal = m[lastI][lastJ - weight[lastI]];
+			result += `.${lastI}`;
+			lastJ -= weight[lastI];
+		}
+	}
+
+	return result.split('.').reverse().filter(i => i);
+}
+
+/**
+ * Return the lightest products of the save volume and weight as of chosen
+ * @param {number[]} array all products
+ * @param chosenIndexes chosen indexes
+ * @returns {Array} lightest items
+ */
+const getLightestProducts = (array, chosenIndexes) => {
+	const foundProducts = array.filter((product, index) => chosenIndexes.includes(index));
+	const lightestItems = [];
+
+	for (let i = 0; i < foundProducts.length; i++) {
+		const volume = getProductVol(foundProducts[i]);
+		const [, price, , , , weight] = foundProducts[i];
+		const lighterItem = array.find(product => {
+			const [, foundPrice, , , , foundWeight] = product;
+			if (volume === getProductVol(product) && price === foundPrice && weight > foundWeight) {
+				return product;
+			}
+		});
+
+		lightestItems.push(lighterItem || foundProducts[i]);
+	}
+	return lightestItems;
+}
+
 module.exports = {
-	getStats,
+	printStats,
 	getProductVol,
-	getFilledTote
+	getIndexesOfChosenItems,
+	getLightestProducts
 };
